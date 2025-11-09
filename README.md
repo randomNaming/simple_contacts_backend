@@ -175,7 +175,3 @@ contacts-backend/
 
 - [前端项目](../contacts-frontend) - uni-app 前端应用
 
-## 📄 许可证
-
-MIT License
-
