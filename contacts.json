@@ -17,7 +17,8 @@
     "name": "老师",
     "phone": "12312312311123",
     "avatar": "http://localhost:3000/uploads/1762486300388.jpg",
-    "id": 1762486301160
+    "id": 1762486301160,
+    "pinned": false
   },
   {
     "name": "程一禾",

@@ -5,16 +5,24 @@ const multer = require("multer");
 const path = require("path");
 
 const app = express();
-const PORT = 3000;
-const DATA_FILE = "./contacts.json";
-const UPLOAD_DIR = path.join(__dirname, "uploads");
+const PORT = process.env.PORT || 3000;
+const API_BASE_URL = process.env.API_BASE_URL || `http://localhost:${PORT}`;
+const DATA_FILE = process.env.DATA_FILE || "./data/contacts.json";
+const UPLOAD_DIR = process.env.UPLOAD_DIR || path.join(__dirname, "uploads");
 
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(UPLOAD_DIR));
 
-// 上传目录存在检测
+// 确保目录存在
+const dataDir = path.dirname(DATA_FILE);
+fs.ensureDirSync(dataDir);
 fs.ensureDirSync(UPLOAD_DIR);
+
+// 初始化数据文件（如果不存在）
+if (!fs.existsSync(DATA_FILE)) {
+  fs.writeJsonSync(DATA_FILE, [], { spaces: 2 });
+}
 
 // 配置头像上传
 const storage = multer.diskStorage({
@@ -62,8 +70,8 @@ app.put("/contacts/:id", async (req, res) => {
 // 上传头像接口
 app.post("/upload", upload.single("avatar"), (req, res) => {
   res.json({
-    url: `http://localhost:${PORT}/uploads/${req.file.filename}`,
+    url: `${API_BASE_URL}/uploads/${req.file.filename}`,
   });
 });
 
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, "0.0.0.0", () => console.log(`Server running on port ${PORT}`));
